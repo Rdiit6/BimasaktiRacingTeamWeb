@@ -9,10 +9,8 @@ export const metadata = { title: "Gallery | Bimasakti Racing Team" };
 const IMAGE_EXT = /\.(png|jpe?g|webp|avif|gif)$/i;
 // BM-9 & BM-10 tidak ada.
 const MODELS = [1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15];
-// Nama yang ditampilkan; BM-14 & BM-15 pakai akhiran H. Folder tetap bm-<nomor>.
-const label = (n) => `BM-${n}${n === 14 || n === 15 ? "H" : ""}`;
 // Jumlah maksimal foto di dropdown per BM.
-const photoLimit = (n) => (n >= 11 ? 15 : 5);
+const photoLimit = (n) => (n >= 11 ? 15 : 10);
 
 // Foto tiap mobil ada di public/assets/gallery/bm-<n>/.
 // cover.* dipakai untuk kotak judul, sisanya muncul di dropdown (urut nama file).
@@ -54,7 +52,7 @@ export default function GalleryPage() {
         <header className="gallery__head">
           <span className="ghost" aria-hidden="true">Gallery</span>
           <h1 className="section-title">GALLERY</h1>
-          <p className="gallery__sub">EVERY CAR, EVERY ERA — BM-1 TO BM-15H</p>
+          <p className="gallery__sub">EVERY CAR, EVERY ERA — BM-1 TO BM-15</p>
         </header>
 
         <div className="gallery__list">
@@ -63,10 +61,10 @@ export default function GalleryPage() {
             <details className="era" name="gallery-era" key={n}>
               <summary className="era__head">
                 <div className="era__cover panel">
-                  {cover ? <img src={cover} alt={label(n)} loading="lazy" /> : <span className="era__empty">{label(n)}</span>}
+                  {cover ? <img src={cover} alt={`BM-${n}`} loading="lazy" /> : <span className="era__empty">BM-{n}</span>}
                 </div>
                 <div className="era__text">
-                  <h2 className="era__title">{label(n)}</h2>
+                  <h2 className="era__title">BM-{n}</h2>
                   {years && <p className="era__year">{years}</p>}
                   <p className="era__count">{photos.length > 0 ? `${photos.length} PHOTOS` : "PHOTOS COMING SOON"}</p>
                 </div>
@@ -78,7 +76,7 @@ export default function GalleryPage() {
                 {photos.length > 0
                   ? photos.map(({ src, ratio }, i) => (
                       <figure className="panel era__photo" key={src} style={{ "--r": ratio }}>
-                        <img src={src} alt={`${label(n)} photo ${i + 1}`} loading="lazy" />
+                        <img src={src} alt={`BM-${n} photo ${i + 1}`} loading="lazy" />
                       </figure>
                     ))
                   : Array.from({ length: Math.min(photoLimit(n), 7) }).map((_, i) => (

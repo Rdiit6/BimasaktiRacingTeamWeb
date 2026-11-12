@@ -39,7 +39,7 @@ export default function Story() {
         <Quote
           area="q1"
           text="A JOY, TO BE ABLE TO BUILD AN ENGINEERING MASTERPIECE AMONG PEERS"
-          by="RAFI, GEN-14 TECHNICAL CHIEF"
+          by="FARHAN ABIDZAR, BM-16 CAPTAIN"
         />
         <Panel area="p2" n={3} alt="Panel 2">
           <Caption pos="tl">BUILT FROM OBSESSION</Caption>
@@ -61,11 +61,17 @@ export default function Story() {
           <Caption pos="bl">CIRCUIT DE BARCELONA<br />CATALUNYA</Caption>
         </Panel>
         <Panel area="p5" n={8} alt="Panel 5" className="panel--wide" />
-        <Quote
-          area="q2"
-          text="EVERY LAP IS A DIALOGUE BETWEEN ENGINEERING AND INSTINCT, WHILE I AM THE TRANSLATOR"
-          by="ABDURRAHMAN WAHID ATHALLAH, BM-14H DRIVER"
-        />
+        {/* Kutipan dibagi jadi 2 kotak, ditumpuk atas-bawah */}
+        <div className="quote-split" style={{ gridArea: "q2" }}>
+          <blockquote className="quote">
+            <h2>&ldquo;TOP SPEED ISN'T ABOUT HOW HARD YOU PUSH THE THROTTLE, IT'S ABOUT MASTERING EVERY CORNER WITH PRECISION&rdquo;</h2>
+           <cite>- TAZZAKA ARRIFIN, BM-15H DRIVER</cite>
+          </blockquote>
+          <blockquote className="quote">
+            <h2>&rdquo;EVERY LAP IS A DIALOGUE BETWEEN ENGINEERING & INSTINCT, AND I AM THE TRANSLATOR&rdquo;</h2>
+            <cite>- ABDURRAHMAN WAHID ATHALLAH, BM-15H DRIVER</cite>
+          </blockquote>
+        </div>
       </div>
     </section>
   );

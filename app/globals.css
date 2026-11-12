@@ -197,12 +197,14 @@ a:hover .roll__col, a:focus-visible .roll__col, .is-active .roll__col { transfor
   font-size: clamp(22px, 2.6vw, 44px); line-height: 1.02;
 }
 .quote cite { font-style: normal; font-weight: 600; font-size: clamp(11px, 0.95vw, 14px); letter-spacing: 0.04em; }
+.quote-split { display: grid; grid-template: 1fr 1fr / minmax(0, 1fr); gap: 14px; min-width: 0; min-height: 0; }
 
 @media (max-width: 760px) {
   .story__grid--a, .story__grid--b { grid-template-columns: 1fr 1fr; grid-template-rows: none; grid-auto-rows: 240px; }
   .story__grid--a { grid-template-areas: "p11 p12" "q1 q1" "p2 p2" "p3 p3"; }
-  .story__grid--b { grid-template-areas: "p42 p41" "p43 p43" "p5 p5" "q2 q2"; }
   .quote { min-height: 240px; }
+  .story__grid--b { grid-template-areas: "p42 p41" "p43 p43" "p5 p5" "q2 q2" "q2 q2"; }
+  .quote-split .quote { min-height: 0; }
 }
 
 /* ===== Judul section & teks "hantu" besar ===== */
