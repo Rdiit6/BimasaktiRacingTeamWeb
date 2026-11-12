@@ -1,0 +1,512 @@
+/* ===== Token warna & font — ubah di sini kalau warnanya beda dari aslinya ===== */
+:root {
+  --bg: #000000;
+  --bg-2: #0f0f10;
+  --fg: #ffffff;
+  --muted: #a3a3a3;
+  --accent: #d7141a;      /* merah racing */
+  --line: rgba(255, 255, 255, 0.18);
+  --nav-h: 76px;
+  --pad: clamp(16px, 4vw, 56px);
+  --title-size: clamp(80px, 21vw, 360px); /* judul BIMASAKTI di hero & loader */
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ===== Roll text (efek hover huruf) ===== */
+.roll { display: inline-flex; overflow: hidden; height: 1.15em; line-height: 1.15em; }
+.roll__col {
+  display: flex; flex-direction: column;
+  transition: transform 0.55s cubic-bezier(0.7, 0, 0.2, 1);
+  transition-delay: calc(var(--i) * 25ms);
+}
+.roll__char { height: 1.15em; }
+a:hover .roll__col, a:focus-visible .roll__col, .is-active .roll__col { transform: translateY(-80%); }
+
+/* ===== Loader ===== */
+.loader {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--bg);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: var(--pad);
+  font-family: var(--font-display), sans-serif;
+  transition: opacity 0.9s ease;
+}
+.loader--done { opacity: 0; pointer-events: none; }
+.loader__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+/* ukuran & posisi harus sama dengan .hero__title */
+.loader__word {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--title-size); letter-spacing: -0.01em;
+  text-anchor: middle; dominant-baseline: central;
+  fill: none; stroke: var(--fg); stroke-width: 2px;
+}
+.loader__row {
+  position: relative;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  font-size: clamp(16px, 2vw, 28px); line-height: 1; letter-spacing: 0.06em;
+}
+.loader__pct { color: var(--accent); font-variant-numeric: tabular-nums; }
+.loader__bar { margin-top: 16px; height: 3px; background: var(--line); }
+.loader__bar span { display: block; height: 100%; background: var(--fg); }
+
+/* "RACING TEAM" di bawah BIMASAKTI; dipakai di hero & loader dengan posisi yang sama */
+.brand-sub {
+  position: absolute; left: 50%; top: calc(42% + var(--title-size) * 0.5);
+  transform: translateX(-50%);
+  font-family: var(--font-display), sans-serif; font-weight: 400;
+  font-size: calc(var(--title-size) * 0.16); line-height: 1;
+  letter-spacing: 0.5em; padding-left: 0.5em; /* imbangi spasi setelah huruf terakhir */
+  white-space: nowrap; color: var(--fg); pointer-events: none;
+}
+.hero .brand-sub { z-index: 2; }
+/* di loader: muncul geser ke atas + fade saat progress hampir selesai */
+.loader .brand-sub {
+  opacity: 0; transform: translate(-50%, 0.6em);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.loader .brand-sub.is-shown { opacity: 1; transform: translateX(-50%); }
+
+/* ===== Navbar ===== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 0 var(--pad);
+  transition: background 0.3s, backdrop-filter 0.3s;
+}
+.nav--solid { background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); }
+.nav__logo img { height: 40px; width: auto; }
+.nav__links { display: flex; gap: clamp(16px, 2.2vw, 36px); }
+.nav__link {
+  font-family: var(--font-display), sans-serif;
+  font-size: 15px; letter-spacing: 0.04em; color: var(--muted);
+}
+.nav__link:hover, .nav__link.is-active { color: var(--fg); }
+.nav__right { display: flex; align-items: center; gap: 16px; }
+.nav__contact {
+  font-family: var(--font-display), sans-serif; font-size: 14px; letter-spacing: 0.06em;
+  padding: 10px 20px; border: 1px solid var(--fg);
+  transition: background 0.25s, color 0.25s;
+}
+.nav__contact:hover { background: var(--fg); color: var(--bg); }
+.nav__burger { display: none; width: 36px; height: 36px; }
+.nav__burger img { width: 100%; height: 100%; }
+
+@media (max-width: 960px) {
+  .nav__burger { display: block; }
+  .nav__contact { display: none; }
+  .nav__links {
+    position: fixed; inset: var(--nav-h) 0 0 0;
+    flex-direction: column; justify-content: center; align-items: center; gap: 22px;
+    background: var(--bg);
+    transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+  .nav--open .nav__links { transform: none; }
+  .nav--open { background: var(--bg); }
+  .nav__link { font-size: 32px; }
+}
+
+/* ===== Hero / profile section ===== */
+.hero {
+  position: relative; height: 100svh; min-height: 560px;
+  overflow: hidden; isolation: isolate;
+}
+.hero__title {
+  position: absolute; left: 50%; top: 42%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display), sans-serif; font-weight: 400;
+  font-size: var(--title-size); line-height: 0.85; letter-spacing: -0.01em;
+  white-space: nowrap; pointer-events: none;
+  z-index: 2; color: transparent; -webkit-text-stroke: 2px var(--fg);
+}
+.hero__bg {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%; object-fit: cover; object-position: center 70%;
+}
+/* gelapkan foto supaya teks tetap terbaca */
+.hero::after {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.15) 45%, rgba(0, 0, 0, 0.85));
+}
+.hero__tagline, .hero__uni {
+  position: absolute; z-index: 5; bottom: clamp(24px, 5vh, 56px);
+  font-family: var(--font-display), sans-serif; letter-spacing: 0.04em;
+}
+.hero__tagline {
+  left: var(--pad); display: flex; flex-direction: column;
+  font-size: clamp(20px, 2.4vw, 36px); line-height: 1;
+}
+.hero__tagline span:last-child { color: var(--accent); }
+.hero__uni { right: var(--pad); font-size: clamp(12px, 1.1vw, 16px); color: var(--muted); }
+
+/* ===== Story (panel komik) ===== */
+.story { padding: clamp(64px, 10vw, 140px) var(--pad); display: grid; gap: 14px; }
+.story__grid { display: grid; gap: 14px; }
+.story__grid--a {
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-areas:
+    "p11 p11 p11 p11 p12 p12 p12 p12 q1 q1 q1 q1"
+    "p2  p2  p2  p2  p2  p3  p3  p3  p3 p3 p3 p3";
+  grid-template-rows: minmax(260px, 34vw) minmax(280px, 38vw);
+}
+.story__grid--b {
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-areas:
+    "p42 p42 p42 p42 p41 p41 p41 p41 p43 p43 p43 p43"
+    "p5  p5  p5  p5  p5  p5  p5  q2  q2  q2  q2  q2";
+  grid-template-rows: minmax(260px, 30vw) minmax(280px, 36vw);
+}
+.panel {
+  position: relative; overflow: hidden;
+  border: 3px solid var(--fg); background: var(--bg-2);
+}
+.panel img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; }
+.panel:hover img { transform: scale(1.04); }
+.caption {
+  position: absolute; z-index: 1;
+  background: var(--fg); color: var(--bg);
+  font-family: var(--font-display), sans-serif; letter-spacing: 0.03em;
+  font-size: clamp(12px, 1.2vw, 18px); line-height: 1.1;
+  padding: 8px 12px; max-width: 80%;
+}
+.caption--tl { top: 0; left: 0; }
+.caption--tr { top: 0; right: 0; }
+.caption--bl { bottom: 0; left: 0; }
+.caption--br { bottom: 0; right: 0; text-align: right; }
+.quote {
+  display: flex; flex-direction: column; justify-content: center; gap: 18px;
+  padding: clamp(16px, 2.5vw, 40px);
+  border: 3px solid var(--fg); background: var(--accent);
+}
+.quote h2 {
+  font-family: var(--font-display), sans-serif; font-weight: 400;
+  font-size: clamp(22px, 2.6vw, 44px); line-height: 1.02;
+}
+.quote cite { font-style: normal; font-weight: 600; font-size: clamp(11px, 0.95vw, 14px); letter-spacing: 0.04em; }
+
+@media (max-width: 760px) {
+  .story__grid--a, .story__grid--b { grid-template-columns: 1fr 1fr; grid-template-rows: none; grid-auto-rows: 240px; }
+  .story__grid--a { grid-template-areas: "p11 p12" "q1 q1" "p2 p2" "p3 p3"; }
+  .story__grid--b { grid-template-areas: "p42 p41" "p43 p43" "p5 p5" "q2 q2"; }
+  .quote { min-height: 240px; }
+}
+
+/* ===== Judul section & teks "hantu" besar ===== */
+.section-title {
+  font-family: var(--font-display), sans-serif; font-weight: 400;
+  font-size: clamp(40px, 7vw, 110px); line-height: 0.95; position: relative; z-index: 1;
+}
+.ghost {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(120px, 26vw, 420px); line-height: 0.8;
+  color: transparent; -webkit-text-stroke: 1px var(--line);
+  white-space: nowrap; pointer-events: none; user-select: none;
+}
+
+/* ===== Area putih (sponsor & race), gradasi dari/ke hitam ===== */
+.light {
+  --fg: #000000;
+  --muted: #555555;
+  --line: rgba(0, 0, 0, 0.15);
+  --fade: clamp(160px, 22vw, 320px);
+  color: var(--fg);
+  padding-bottom: calc(var(--fade) * 0.4);
+  background: linear-gradient(
+    to bottom,
+    #000 0, #fff var(--fade),
+    #fff calc(100% - var(--fade) * 0.8), #000 100%
+  );
+}
+.light .sponsors { padding-top: calc(var(--fade) * 0.75); }
+.light .race { padding-bottom: clamp(24px, 3vw, 40px); }
+.light .btn { color: #fff; }
+/* versi halaman sendiri: beri ruang untuk navbar */
+.light--page { padding-top: var(--nav-h); }
+
+/* ===== Sponsors ===== */
+.sponsors { padding: clamp(64px, 9vw, 120px) var(--pad); text-align: center; }
+.sponsors__tiers { margin-top: clamp(32px, 5vw, 64px); display: grid; gap: clamp(28px, 4vw, 56px); }
+.tier__name {
+  font-family: var(--font-display), sans-serif; font-weight: 400;
+  font-size: clamp(18px, 2vw, 28px); letter-spacing: 0.08em; color: var(--muted);
+  margin-bottom: 18px;
+}
+.tier--exclusive .tier__name { color: var(--fg); }
+.tier__logos { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--logo-gap) calc(var(--logo-gap) * 1.6); }
+.tier__slot, .tier__logo {
+  width: var(--logo-w); aspect-ratio: 16 / 9;
+  border: 1px dashed var(--line);
+  display: grid; place-items: center; padding: 14px;
+}
+.tier__logo { border: 0; padding: 0; }
+.tier__logo img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; }
+a.tier__logo:hover img { transform: scale(1.05); }
+/* ukuran logo per tier: exclusive terbesar, bronze & supports terkecil */
+.tier--exclusive { --logo-w: clamp(240px, 34vw, 460px); --logo-gap: 24px; }
+.tier--platinum  { --logo-w: clamp(170px, 22vw, 320px); --logo-gap: 22px; }
+.tier--gold      { --logo-w: clamp(135px, 16vw, 230px); --logo-gap: 18px; }
+.tier--silver    { --logo-w: clamp(110px, 12.5vw, 180px); --logo-gap: 16px; }
+.tier--bronze,
+.tier--supports  { --logo-w: clamp(85px, 9.5vw, 140px); --logo-gap: 14px; }
+
+/* Home: tiap tier 1 baris; kalau tidak muat, baris berjalan ke kiri & berhenti saat di-hover */
+.sponsors__tiers { grid-template-columns: minmax(0, 1fr); } /* jangan melebar ikut baris logo */
+.tier__row { overflow: hidden; }
+.tier__track { display: flex; justify-content: center; }
+.tier__row .tier__logos { flex-wrap: nowrap; flex: none; }
+.tier__row--moving {
+  margin-inline: calc(-1 * var(--pad));
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.tier__row--moving .tier__track {
+  justify-content: flex-start; width: max-content;
+  animation: marquee var(--dur) linear infinite;
+}
+.tier__row--moving:hover .tier__track { animation-play-state: paused; }
+.tier__row--moving .tier__logos { padding-right: calc(var(--logo-gap) * 1.6); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .tier__row--moving { overflow-x: auto; } }
+
+/* ===== Race with us ===== */
+.race {
+  position: relative; overflow: hidden;
+  padding: clamp(80px, 12vw, 180px) var(--pad) clamp(56px, 8vw, 110px);
+  text-align: center;
+}
+.race__text {
+  position: relative; z-index: 1;
+  max-width: 62ch; margin: 22px auto 34px;
+  font-weight: 600; font-size: clamp(14px, 1.3vw, 18px); line-height: 1.6; color: var(--muted);
+}
+.btn {
+  position: relative; z-index: 1;
+  display: inline-flex; padding: 16px 34px;
+  background: var(--accent); color: var(--fg);
+  font-family: var(--font-display), sans-serif; font-size: clamp(16px, 1.6vw, 22px); letter-spacing: 0.06em;
+}
+.precontent {
+  width: min(100% - 2 * var(--pad), 860px); margin: 0 auto clamp(32px, 5vw, 72px);
+}
+.precontent img { width: 100%; height: auto; }
+
+/* ===== Journey / footer ===== */
+.journey {
+  position: relative; overflow: hidden;
+  padding: clamp(80px, 12vw, 160px) var(--pad) 40px; text-align: center;
+  border-top: 1px solid var(--line);
+}
+.journey__sub {
+  position: relative; z-index: 1; margin-top: 14px;
+  font-weight: 600; letter-spacing: 0.06em; color: var(--muted);
+}
+.journey__list {
+  position: relative; z-index: 1; list-style: none;
+  margin: clamp(32px, 5vw, 56px) auto 0; max-width: 1100px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;
+}
+.journey__list li {
+  display: flex; align-items: center; gap: 12px; justify-content: center;
+  padding: 18px; border: 1px solid var(--line);
+  font-family: var(--font-display), sans-serif; letter-spacing: 0.04em;
+  transition: border-color 0.25s;
+}
+.journey__list li:hover { border-color: var(--fg); }
+.journey__list img { width: 26px; height: 26px; }
+.journey__copy { margin-top: 48px; font-size: 13px; color: var(--muted); }
+
+/* ===== Cars (timeline zig-zag) ===== */
+.cars {
+  position: relative; overflow: hidden;
+  padding: calc(var(--nav-h) + clamp(48px, 7vw, 96px)) var(--pad) clamp(80px, 10vw, 140px);
+  background: radial-gradient(ellipse 70% 40% at 0% 0%, rgba(215, 20, 26, 0.35), transparent 70%), var(--bg);
+}
+.cars__head { position: relative; text-align: center; margin-bottom: clamp(56px, 8vw, 112px); }
+.cars__sub {
+  position: relative; z-index: 1; margin-top: 14px;
+  font-weight: 600; letter-spacing: 0.06em; color: var(--muted);
+}
+
+.tl {
+  --rail: clamp(20px, 4vw, 56px);   /* jarak garis samping ke kartu */
+  --gap: clamp(28px, 6vw, 96px);    /* jarak antar kolom */
+  --row-gap: clamp(56px, 7vw, 96px);
+  --stroke: clamp(6px, 0.8vw, 12px);
+  /* tengah kolom kiri (dari kiri) / kolom kanan (dari kanan) */
+  --c: calc(var(--rail) + (100% - 2 * var(--rail) - var(--gap)) / 4);
+  /* tinggi tengah foto (foto 16:10) */
+  --y: calc((100cqw - 2 * var(--rail) - var(--gap)) * 5 / 32);
+  container-type: inline-size;
+  max-width: 1200px; margin: 0 auto;
+  display: grid; row-gap: var(--row-gap);
+}
+.tl__row {
+  position: relative;
+  display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--gap);
+  padding-inline: var(--rail);
+}
+.tl__row--rev { direction: rtl; }
+.tl__row--rev > * { direction: ltr; }
+.tl__row::before, .tl__row::after { content: ""; position: absolute; background: var(--accent); }
+/* garis horizontal */
+.tl__row::before { top: calc(var(--y) - var(--stroke) / 2); left: 0; right: 0; height: var(--stroke); }
+/* garis turun ke baris berikutnya */
+.tl__row::after {
+  top: calc(var(--y) - var(--stroke) / 2); right: 0;
+  width: var(--stroke); height: calc(100% + var(--row-gap) + var(--stroke));
+}
+.tl__row--rev::after { right: auto; left: 0; }
+.tl__row--last::after { display: none; }
+.tl__row--first::before { left: var(--c); }
+.tl__row--end-r::before { right: var(--c); }
+.tl__row--end-r1::before { right: calc(100% - var(--c)); }
+.tl__row--end-l::before { left: var(--c); }
+.tl__row--end-l1::before { left: calc(100% - var(--c)); }
+
+.car { position: relative; z-index: 1; transition: opacity 0.7s, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.tl--js .car { opacity: 0; transform: translateY(32px); }
+.tl--js .car.is-in { opacity: 1; transform: none; }
+.car__media {
+  position: relative; aspect-ratio: 16 / 10; overflow: hidden;
+  border: 3px solid var(--accent); background: var(--bg-2);
+}
+.car__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+.car:hover .car__media img { transform: scale(1.04); }
+.car__placeholder {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--font-display), sans-serif; font-size: clamp(40px, 8vw, 120px);
+  color: transparent; -webkit-text-stroke: 1px var(--line);
+}
+.car__gen {
+  position: absolute; right: 0; bottom: 0;
+  padding: 4px 12px; background: var(--accent);
+  font-family: var(--font-display), sans-serif; font-size: clamp(14px, 1.4vw, 20px);
+}
+.car__year {
+  margin-top: 18px;
+  font-family: var(--font-display), sans-serif; font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 48px); line-height: 1;
+}
+.car__list {
+  margin-top: 12px; padding-left: 1.1em;
+  font-size: clamp(13px, 1.1vw, 15px); line-height: 1.55; color: var(--muted);
+}
+.car__list li::marker { color: var(--accent); }
+
+/* Mobile: satu kolom, garis lurus di kiri */
+@media (max-width: 760px) {
+  .tl { --rail: 28px; --row-gap: 48px; --stroke: 6px; }
+  .tl__row {
+    grid-template-columns: 1fr; row-gap: var(--row-gap);
+    padding-inline: var(--rail) 0; direction: ltr;
+  }
+  .tl__row::before, .tl__row::after { display: none; }
+  .car::before, .car::after { content: ""; position: absolute; background: var(--accent); }
+  /* tick ke foto */
+  .car::before {
+    left: calc(-1 * var(--rail)); width: var(--rail); height: var(--stroke);
+    top: calc((100cqw - var(--rail)) * 5 / 16 - var(--stroke) / 2);
+  }
+  /* garis turun ke kartu berikutnya */
+  .car::after {
+    left: calc(-1 * var(--rail)); width: var(--stroke);
+    top: calc((100cqw - var(--rail)) * 5 / 16 - var(--stroke) / 2);
+    height: calc(100% + var(--row-gap) + var(--stroke));
+  }
+  .tl__row--last .car:last-child::after { display: none; }
+}
+
+/* ===== Gallery (dropdown per mobil) ===== */
+.gallery {
+  position: relative; overflow: hidden;
+  padding: calc(var(--nav-h) + clamp(48px, 7vw, 96px)) var(--pad) clamp(80px, 10vw, 140px);
+}
+.gallery__head { position: relative; text-align: center; margin-bottom: clamp(48px, 7vw, 96px); }
+.gallery__sub {
+  position: relative; z-index: 1; margin-top: 14px;
+  font-weight: 600; letter-spacing: 0.06em; color: var(--muted);
+}
+.gallery__list { max-width: 1200px; margin: 0 auto; display: grid; gap: 14px; }
+.era { border: 3px solid var(--fg); background: var(--bg-2); }
+.era__head {
+  list-style: none; cursor: pointer;
+  display: grid; grid-template-columns: minmax(160px, 38%) 1fr auto; align-items: center;
+  gap: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px);
+}
+.era__head::-webkit-details-marker { display: none; }
+.era__cover { aspect-ratio: 16 / 9; border-width: 0 3px 0 0; }
+.era__empty, .era__slot::after {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--font-display), sans-serif; color: transparent; -webkit-text-stroke: 1px var(--line);
+}
+.era__empty { font-size: clamp(36px, 6vw, 96px); }
+.era__title {
+  font-family: var(--font-display), sans-serif; font-weight: 400;
+  font-size: clamp(36px, 6vw, 88px); line-height: 0.9;
+}
+.era__year { margin-top: 8px; font-family: var(--font-display), sans-serif; font-size: clamp(18px, 2vw, 28px); color: var(--accent); }
+.era__count { margin-top: 10px; font-weight: 600; font-size: 13px; letter-spacing: 0.06em; color: var(--muted); }
+.era__chevron {
+  width: clamp(36px, 4vw, 52px); aspect-ratio: 1; background: var(--accent); position: relative;
+  transition: transform 0.35s;
+}
+.era__chevron::before {
+  content: ""; position: absolute; left: 50%; top: 45%; width: 30%; height: 30%;
+  border: solid var(--fg); border-width: 0 3px 3px 0; transform: translate(-50%, -50%) rotate(45deg);
+}
+.era[open] .era__chevron { transform: rotate(180deg); }
+.era__head:hover .era__cover img { transform: scale(1.04); }
+
+/* baris justified: lebar tiap foto = rasio x tinggi baris, lalu melar mengisi baris */
+.era__grid {
+  --row-h: clamp(170px, 22vw, 300px);
+  display: flex; flex-wrap: wrap; gap: 14px;
+  padding: 14px; border-top: 3px solid var(--fg);
+}
+.era__photo {
+  flex: var(--r) 1 calc(var(--r) * var(--row-h));
+  aspect-ratio: var(--r);
+  min-width: 0;
+}
+.era__photo img { display: block; }
+/* cegah baris terakhir yang isinya sedikit jadi melar raksasa */
+.era__filler { flex: 9999 1 0; height: 0; }
+.era__slot { border-style: dashed; border-color: var(--line); }
+.era__slot::after { content: "PHOTO"; font-size: clamp(20px, 3vw, 40px); }
+.era[open] .era__grid { animation: era-open 0.4s ease; }
+@keyframes era-open { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 760px) {
+  .era__head { grid-template-columns: 1fr auto; padding: 0 16px 16px 0; }
+  .era__cover { grid-column: 1 / -1; border-width: 0 0 3px 0; }
+  .era__text { padding-left: 16px; }
+  .era__grid { --row-h: 120px; gap: 8px; padding: 8px; }
+}
+
+/* ===== 404 ===== */
+.notfound {
+  min-height: 100svh; display: grid; place-content: center; text-align: center; gap: 12px;
+  padding: var(--pad);
+}
+.notfound h1 { font-family: var(--font-display), sans-serif; font-weight: 400; font-size: clamp(36px, 6vw, 80px); }
+.notfound p { color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  html { scroll-behavior: auto; }
+}
