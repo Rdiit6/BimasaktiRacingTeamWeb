@@ -43,8 +43,7 @@ export default function Story() {
           by="FARHAN ABIDZAR, BM-16 CAPTAIN"
         />
         <Panel area="p2" n={3} alt="Panel 2">
-          <Caption pos="tl">BUILT FROM OBSESSION</Caption>
-          <Caption pos="br">NOT EXPECTATION</Caption>
+          <Caption pos="bl">BUILT FROM OBSESSION<br />NOT EXPECTATION</Caption>
         </Panel>
         <Panel area="p3" n={4} alt="Panel 3" className="panel--wide">
           <Caption pos="bl">The origin, 1st Gen Car</Caption>
@@ -52,14 +51,14 @@ export default function Story() {
       </div>
 
       <div className="story__grid story__grid--b">
-        <Panel area="p42" n={5} alt="Panel 4.2">
-          <Caption pos="tl">FS SPAIN, 2024</Caption>
+        <Panel area="p42" n={5} alt="Panel 4.2" className="panel--portrait">
+          <Caption pos="tl">GRAND LAUNCHING BM-15H</Caption>
         </Panel>
-        <Panel area="p41" n={6} alt="Panel 4.1">
-          <Caption pos="tr">BM-14H JEMBO CABLE</Caption>
+        <Panel area="p41" n={6} alt="Panel 4.1" className="panel--portrait">
+          <Caption pos="tl">GRAND LAUNCHING BM-14H</Caption>
         </Panel>
-        <Panel area="p43" n={7} alt="Panel 4.3">
-          <Caption pos="bl">CIRCUIT DE BARCELONA<br />CATALUNYA</Caption>
+        <Panel area="p43" n={7} alt="Panel 4.3" className="panel--portrait">
+          <Caption pos="tl">GRAND LAUNCHING BM-13</Caption>
         </Panel>
         <Panel area="p5" n={8} alt="Panel 5" className="panel--wide" />
         {/* Kutipan dibagi jadi 2 kotak, ditumpuk atas-bawah */}
