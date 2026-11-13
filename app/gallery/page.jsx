@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import Journey from "@/components/Journey";
+import Pic from "@/components/Pic";
 import imageRatio from "@/lib/imageRatio";
 import { CARS } from "@/data/site";
 
@@ -52,7 +53,7 @@ export default function GalleryPage() {
         <header className="gallery__head">
           <span className="ghost" aria-hidden="true">Gallery</span>
           <h1 className="section-title">GALLERY</h1>
-          <p className="gallery__sub">EVERY CAR, EVERY ERA — BM-1 TO BM-15</p>
+          <p className="gallery__sub">EVERY CAR, EVERY ERA — <span style={{ whiteSpace: "nowrap" }}>BM-1 TO BM-15</span></p>
         </header>
 
         <div className="gallery__list">
@@ -61,7 +62,11 @@ export default function GalleryPage() {
             <details className="era" name="gallery-era" key={n}>
               <summary className="era__head">
                 <div className="era__cover panel">
-                  {cover ? <img src={cover} alt={`BM-${n}`} loading="lazy" /> : <span className="era__empty">BM-{n}</span>}
+                  {cover ? (
+                    <Pic src={cover} alt={`BM-${n}`} sizes="(max-width: 760px) 100vw, 460px" />
+                  ) : (
+                    <span className="era__empty">BM-{n}</span>
+                  )}
                 </div>
                 <div className="era__text">
                   <h2 className="era__title">BM-{n}</h2>
@@ -76,7 +81,7 @@ export default function GalleryPage() {
                 {photos.length > 0
                   ? photos.map(({ src, ratio }, i) => (
                       <figure className="panel era__photo" key={src} style={{ "--r": ratio }}>
-                        <img src={src} alt={`BM-${n} photo ${i + 1}`} loading="lazy" />
+                        <Pic src={src} alt={`BM-${n} photo ${i + 1}`} sizes="(max-width: 760px) 60vw, 40vw" />
                       </figure>
                     ))
                   : Array.from({ length: Math.min(photoLimit(n), 7) }).map((_, i) => (

@@ -19,6 +19,18 @@ export default function Navbar() {
 
   useEffect(() => setOpen(false), [pathname]);
 
+  // Saat menu HP terbuka: halaman di belakang tidak ikut ter-scroll, Esc menutup menu.
+  useEffect(() => {
+    if (!open) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
     <header className={`nav ${scrolled ? "nav--solid" : ""} ${open ? "nav--open" : ""}`}>
       <Link href="/" className="nav__logo" aria-label="Bimasakti Racing Team home">
@@ -35,6 +47,8 @@ export default function Navbar() {
             <RollText text={l.label} />
           </Link>
         ))}
+        {/* tombol Contact Us di dalam menu HP (di desktop ada di kanan atas) */}
+        <a href={CONTACT_URL} className="nav__contact nav__contact--menu">CONTACT US</a>
       </nav>
 
       <div className="nav__right">
@@ -45,7 +59,8 @@ export default function Navbar() {
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          <img src="/assets/icon/navicon.svg" alt="Nav Icon" />
+          {/* 3 garis, berubah jadi X saat menu terbuka */}
+          <span /><span /><span />
         </button>
       </div>
     </header>

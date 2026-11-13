@@ -34,7 +34,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   transition-delay: calc(var(--i) * 25ms);
 }
 .roll__char { height: 1.15em; }
-a:hover .roll__col, a:focus-visible .roll__col, .is-active .roll__col { transform: translateY(-80%); }
+a:hover .roll__col, a:focus-visible .roll__col { transform: translateY(-80%); }
 
 /* ===== Loader ===== */
 .loader {
@@ -103,21 +103,38 @@ a:hover .roll__col, a:focus-visible .roll__col, .is-active .roll__col { transfor
   transition: background 0.25s, color 0.25s;
 }
 .nav__contact:hover { background: var(--fg); color: var(--bg); }
-.nav__burger { display: none; width: 36px; height: 36px; }
-.nav__burger img { width: 100%; height: 100%; }
+.nav__burger {
+  display: none; position: relative; width: 44px; height: 44px; margin-right: -8px;
+}
+.nav__burger span {
+  position: absolute; left: 10px; right: 10px; height: 2px; background: var(--fg);
+  transition: transform 0.35s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.2s;
+}
+.nav__burger span:nth-child(1) { top: 14px; }
+.nav__burger span:nth-child(2) { top: 21px; }
+.nav__burger span:nth-child(3) { top: 28px; }
+.nav--open .nav__burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav--open .nav__burger span:nth-child(2) { opacity: 0; }
+.nav--open .nav__burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav__contact--menu { display: none; }
 
 @media (max-width: 960px) {
+  :root { --nav-h: 64px; }
+  .nav__logo img { height: 34px; }
   .nav__burger { display: block; }
   .nav__contact { display: none; }
   .nav__links {
-    position: fixed; inset: var(--nav-h) 0 0 0;
-    flex-direction: column; justify-content: center; align-items: center; gap: 22px;
-    background: var(--bg);
-    transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+    position: fixed; inset: var(--nav-h) 0 0 0; z-index: -1;
+    flex-direction: column; justify-content: center; align-items: center; gap: clamp(14px, 3.2vh, 26px);
+    padding: 24px var(--pad) calc(24px + env(safe-area-inset-bottom));
+    overflow-y: auto; background: var(--bg);
+    transform: translateY(-100%); visibility: hidden;
+    transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1), visibility 0s 0.5s;
   }
-  .nav--open .nav__links { transform: none; }
-  .nav--open { background: var(--bg); }
-  .nav__link { font-size: 32px; }
+  .nav--open .nav__links { transform: none; visibility: visible; transition-delay: 0s; }
+  .nav--open { background: var(--bg); backdrop-filter: none; }
+  .nav__link { font-size: clamp(26px, 7vw, 36px); }
+  .nav__contact--menu { display: inline-flex; margin-top: 12px; font-size: 16px; padding: 12px 28px; }
 }
 
 /* ===== Hero / profile section ===== */
@@ -255,7 +272,7 @@ a:hover .roll__col, a:focus-visible .roll__col, .is-active .roll__col { transfor
   border: 1px dashed var(--line);
   display: grid; place-items: center; padding: 14px;
 }
-.tier__logo { border: 0; padding: 0; }
+.tier__logo { position: relative; border: 0; padding: 0; }
 .tier__logo img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; }
 a.tier__logo:hover img { transform: scale(1.05); }
 /* ukuran logo per tier: exclusive terbesar, bronze & supports terkecil */
@@ -303,9 +320,10 @@ a.tier__logo:hover img { transform: scale(1.05); }
   font-family: var(--font-display), sans-serif; font-size: clamp(16px, 1.6vw, 22px); letter-spacing: 0.06em;
 }
 .precontent {
+  position: relative;
   width: min(100% - 2 * var(--pad), 860px); margin: 0 auto clamp(32px, 5vw, 72px);
 }
-.precontent img { width: 100%; height: auto; }
+.precontent img { object-fit: contain; }
 
 /* ===== Journey / footer ===== */
 .journey {
@@ -494,7 +512,9 @@ a.tier__logo:hover img { transform: scale(1.05); }
 @keyframes era-open { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
 
 @media (max-width: 760px) {
-  .era__head { grid-template-columns: 1fr auto; padding: 0 16px 16px 0; }
+  .gallery__sub { font-size: 13px; }
+  .era__head { grid-template-columns: 1fr auto; padding: 0 0 16px; }
+  .era__chevron { margin-right: 16px; }
   .era__cover { grid-column: 1 / -1; border-width: 0 0 3px 0; }
   .era__text { padding-left: 16px; }
   .era__grid { --row-h: 120px; gap: 8px; padding: 8px; }

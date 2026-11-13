@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { CARS } from "@/data/site";
+import Pic from "./Pic";
 
 // Timeline zig-zag: baris genap kiri→kanan, baris ganjil kanan→kiri,
 // garis merah turun di sisi kanan/kiri supaya tetap nyambung.
@@ -19,7 +20,7 @@ function Car({ car, image }) {
     <article className="car">
       <div className="car__media">
         {image ? (
-          <img src={image} alt={`Bimasakti car ${car.year}`} loading="lazy" />
+          <Pic src={image} alt={`Bimasakti car ${car.year}`} sizes="(max-width: 760px) 100vw, 600px" />
         ) : (
           <span className="car__placeholder" aria-hidden="true">{car.year}</span>
         )}

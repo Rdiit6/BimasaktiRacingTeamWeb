@@ -1,4 +1,5 @@
 import findImage from "@/lib/findImage";
+import Pic from "./Pic";
 
 // Bagian cerita bergaya panel komik.
 // Foto ada di public/assets/image/storySection/panel-1 ... panel-8 (format bebas),
@@ -7,7 +8,7 @@ function Panel({ n, alt, area, children, className = "" }) {
   const src = findImage("assets/image/storySection", `panel-${n}`);
   return (
     <figure className={`panel ${className}`} style={{ gridArea: area }}>
-      {src && <img src={src} alt={alt} loading="lazy" />}
+      {src && <Pic src={src} alt={alt} sizes="(max-width: 760px) 100vw, 60vw" />}
       {children}
     </figure>
   );
