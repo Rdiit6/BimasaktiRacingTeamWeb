@@ -53,7 +53,13 @@ export default function Loader() {
         <span>LOADING</span>
         <span className="loader__pct">{pct}%</span>
       </div>
-      <div className="loader__bar"><span style={{ width: `${pct}%` }} /></div>
+      {/* mobil melaju di ujung progress, jejak merah = bagian yang sudah dimuat */}
+      <div className="loader__bar">
+        <span className="loader__trail" style={{ width: `calc(${pct}% - var(--car-w) * 0.85)` }} />
+        <span className="loader__car" style={{ left: `${pct}%` }}>
+          <img src="/assets/icon/loader-car.png" alt="" />
+        </span>
+      </div>
     </div>
   );
 }

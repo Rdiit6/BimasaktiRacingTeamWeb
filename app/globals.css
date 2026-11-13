@@ -9,8 +9,11 @@
   --nav-h: 76px;
   --pad: clamp(16px, 4vw, 56px);
   --title-size: clamp(80px, 21vw, 360px); /* judul BIMASAKTI di hero & loader */
+  /* tinggi hero; loader memakai nilai yang sama supaya tulisan BIMASAKTI pas di posisi yang sama */
+  --hero-h: max(100vh, 560px);
   color-scheme: dark;
 }
+@supports (height: 100svh) { :root { --hero-h: max(100svh, 560px); } }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -46,7 +49,7 @@ a:hover .roll__col, a:focus-visible .roll__col { transform: translateY(-80%); }
   transition: opacity 0.9s ease;
 }
 .loader--done { opacity: 0; pointer-events: none; }
-.loader__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.loader__svg { position: absolute; top: 0; left: 0; width: 100%; height: var(--hero-h); overflow: visible; }
 /* ukuran & posisi harus sama dengan .hero__title */
 .loader__word {
   font-family: var(--font-display), sans-serif;
@@ -60,12 +63,38 @@ a:hover .roll__col, a:focus-visible .roll__col { transform: translateY(-80%); }
   font-size: clamp(16px, 2vw, 28px); line-height: 1; letter-spacing: 0.06em;
 }
 .loader__pct { color: var(--accent); font-variant-numeric: tabular-nums; }
-.loader__bar { margin-top: 16px; height: 3px; background: var(--line); }
-.loader__bar span { display: block; height: 100%; background: var(--fg); }
+/* Bar loading: mobil melaju di atas garis, meninggalkan jejak merah di belakangnya */
+.loader__bar {
+  --car-h: clamp(28px, 3.4vw, 48px);
+  --car-w: calc(var(--car-h) * 2.52); /* rasio gambar mobil */
+  position: relative; margin-top: calc(var(--car-h) + 10px);
+  height: 3px; background: var(--line);
+}
+.loader__trail {
+  position: absolute; left: 0; top: -1px; height: 5px;
+  background: linear-gradient(to right, transparent, rgba(215, 20, 26, 0.55) 45%, var(--accent) 85%, #ff6a4d);
+  box-shadow: 0 0 14px rgba(215, 20, 26, 0.7);
+}
+.loader__car {
+  position: absolute; bottom: 1px; width: var(--car-w);
+  transform: translateX(-100%); /* moncong mobil = ujung progress */
+}
+.loader__car img { display: block; width: 100%; height: auto; }
+/* garis kecepatan di belakang mobil */
+.loader__car::before {
+  content: ""; position: absolute; right: 88%; bottom: 18%;
+  width: calc(var(--car-w) * 0.9); height: 52%;
+  background:
+    linear-gradient(to right, transparent, rgba(255, 255, 255, 0.55)) 0 15% / 70% 2px no-repeat,
+    linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4)) 100% 50% / 100% 2px no-repeat,
+    linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5)) 40% 85% / 55% 2px no-repeat;
+  animation: speed-lines 0.35s linear infinite;
+}
+@keyframes speed-lines { 50% { transform: translateX(-12%); opacity: 0.6; } }
 
 /* "RACING TEAM" di bawah BIMASAKTI; dipakai di hero & loader dengan posisi yang sama */
 .brand-sub {
-  position: absolute; left: 50%; top: calc(42% + var(--title-size) * 0.5);
+  position: absolute; left: 50%; top: calc(var(--hero-h) * 0.42 + var(--title-size) * 0.5);
   transform: translateX(-50%);
   font-family: var(--font-display), sans-serif; font-weight: 400;
   font-size: calc(var(--title-size) * 0.16); line-height: 1;
@@ -139,11 +168,11 @@ a:hover .roll__col, a:focus-visible .roll__col { transform: translateY(-80%); }
 
 /* ===== Hero / profile section ===== */
 .hero {
-  position: relative; height: 100svh; min-height: 560px;
+  position: relative; height: var(--hero-h);
   overflow: hidden; isolation: isolate;
 }
 .hero__title {
-  position: absolute; left: 50%; top: 42%;
+  position: absolute; left: 50%; top: calc(var(--hero-h) * 0.42);
   transform: translate(-50%, -50%);
   font-family: var(--font-display), sans-serif; font-weight: 400;
   font-size: var(--title-size); line-height: 0.85; letter-spacing: -0.01em;
@@ -185,7 +214,8 @@ a:hover .roll__col, a:focus-visible .roll__col { transform: translateY(-80%); }
   grid-template-areas:
     "p42 p42 p42 p42 p41 p41 p41 p41 p43 p43 p43 p43"
     "p5  p5  p5  p5  p5  p5  p5  q2  q2  q2  q2  q2";
-  grid-template-rows: minmax(260px, 30vw) minmax(280px, 36vw);
+  /* baris bawah boleh memanjang kalau teks kutipan butuh ruang lebih; foto ikut setinggi kutipan */
+  grid-template-rows: minmax(260px, 30vw) minmax(max(280px, 36vw), auto);
 }
 .panel {
   position: relative; overflow: hidden;
