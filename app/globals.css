@@ -252,7 +252,7 @@ a:hover .roll__col, a:focus-visible .roll__col { transform: translateY(-80%); }
   .story__grid--a, .story__grid--b { grid-template-columns: 1fr 1fr; grid-template-rows: none; grid-auto-rows: 240px; }
   .story__grid--a { grid-template-areas: "p11 p12" "q1 q1" "p2 p2" "p3 p3"; }
   .quote { min-height: 240px; }
-  .story__grid--b { grid-template-areas: "p42 p41" "p43 p43" "p5 p5" "q2 q2" "q2 q2"; grid-template-rows: auto auto; }
+  .story__grid--b { grid-template-areas: "p42 p42" "p41 p43" "p5 p5" "q2 q2" "q2 q2"; grid-template-rows: auto auto; }
   .quote-split .quote { min-height: 0; }
   .caption { font-size: 11px; padding: 6px 8px; max-width: 94%; }
 }
